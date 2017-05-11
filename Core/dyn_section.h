@@ -1,14 +1,16 @@
 /*******************************************************************************
- *  @file      dyn_section.h 2017\5\11 20:36:47 $
+ *  @file      dyn_section.h 2017\5\11 23:13:59 $
  *  @author    df
  *  @brief     
  ******************************************************************************/
 
-#ifndef DYN_SECTION_5B5FA2C1_1C4D_4AFD_8487_E88884C88742_H__
-#define DYN_SECTION_5B5FA2C1_1C4D_4AFD_8487_E88884C88742_H__
+#ifndef DYN_SECTION_A3C72CD4_8D8B_4985_8C19_1FE84230709F_H__
+#define DYN_SECTION_A3C72CD4_8D8B_4985_8C19_1FE84230709F_H__
 
 #include "elf.h"
 #include <string>
+#include <vector>
+#include "dyn_item.h"
 /******************************************************************************/
 
 /**
@@ -36,47 +38,52 @@ public:
     /**
          * @fn  bool dyn_section::from_string(std::string str_content);
          *
-         * @brief   Initializes dynamic item from the given string.
+         * @brief   Initializes dyn section from the given string.
          *
          * @param   str_content - input string
          *
-         * @return  parse operation result
+         * @return  True if it succeeds, false if it fails.
          */
     bool from_string(std::string str_content);
 
     /**
+         * @fn  std::string dyn_section::to_string();
+         *
+         * @brief   Converts this object to a string.
+         *
+         * @return  This object as a std::string.
+         */
+    std::string to_string();
+
+    /**
          * @fn  std::string dyn_section::print();
          *
-         * @brief   print section content in styled format
+         * @brief   print section main information in styled format
          *
-         * @return  formated style section content
+         * @return  styled format content
          */
     std::string print();
 
     /**
          * @fn  int dyn_section::size()
          *
-         * @brief   get size of dynamic item
-         *
-         * @return  item size
+         * @brief   get dyn sectoin size
+         * 
+         * @return  section size
          */
-    int size(){ return sizeof(Elf32_Dyn); }
-
-private:
+    int size(){ return items_.size() * sizeof(dyn_item); }
 
     /**
-         * @fn  std::string dyn_section::tag_2_string(int tag);
+         * @fn  int dyn_section::count()
          *
-         * @brief   convert dynamic item to string
+         * @brief   get dyn count in .dynamic section
          *
-         * @param   tag - tag type
-         *
-         * @return  tag in string format
+         * @return  item count
          */
-    std::string tag_2_string(int tag);
+    int count(){ return items_.size(); }
 
 private:
-    Elf32_Dyn dyn_section_;
+    std::vector<dyn_item> items_;
 };
 /******************************************************************************/
-#endif// DYN_SECTION_5B5FA2C1_1C4D_4AFD_8487_E88884C88742_H__
+#endif// DYN_SECTION_A3C72CD4_8D8B_4985_8C19_1FE84230709F_H__

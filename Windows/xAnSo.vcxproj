@@ -77,6 +77,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Core\dyn_item.cpp" />
     <ClCompile Include="..\Core\dyn_section.cpp" />
     <ClCompile Include="..\Core\elf_header.cpp" />
     <ClCompile Include="..\Core\elf_section.cpp" />
@@ -86,6 +87,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Core\dyn_item.h" />
     <ClInclude Include="..\Core\dyn_section.h" />
     <ClInclude Include="..\Core\elf.h" />
     <ClInclude Include="..\Core\elf_common.h" />

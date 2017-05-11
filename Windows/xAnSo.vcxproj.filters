@@ -54,6 +54,9 @@
     <ClCompile Include="..\Core\elf_segment.cpp">
       <Filter>core\ElfSegment</Filter>
     </ClCompile>
+    <ClCompile Include="..\Core\dyn_item.cpp">
+      <Filter>core\DynSection</Filter>
+    </ClCompile>
     <ClCompile Include="..\Core\dyn_section.cpp">
       <Filter>core\DynSection</Filter>
     </ClCompile>
@@ -79,6 +82,9 @@
     </ClInclude>
     <ClInclude Include="..\Core\elf_segment.h">
       <Filter>core\ElfSegment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\dyn_item.h">
+      <Filter>core\DynSection</Filter>
     </ClInclude>
     <ClInclude Include="..\Core\dyn_section.h">
       <Filter>core\DynSection</Filter>

@@ -25,6 +25,8 @@ int main(int argv, char **args)
     header.from_string(file_content);
     printf(header.print().c_str());
 
+    header.
+
     printf("hello, xAnSo");
     return 0;
 }
