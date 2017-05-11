@@ -1,0 +1,19 @@
+﻿生成启动时间为 2017-05-11 21:08:11。
+     1>项目“C:\Users\Administrator\Desktop\android_tools\xAnSo\Windows\xAnSo.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../ /I"C:\Program Files (x86)\Visual Leak Detector\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\Core\dyn_section.cpp
+         dyn_section.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Administrator\Desktop\android_tools\xAnSo\Windows\Debug\xAnSo.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Program Files (x86)\Visual Leak Detector\lib\Win32" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Administrator\Desktop\android_tools\xAnSo\Windows\Debug\xAnSo.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Administrator\Desktop\android_tools\xAnSo\Windows\Debug\xAnSo.lib" /MACHINE:X86 Debug\dyn_section.obj
+         Debug\elf_header.obj
+         Debug\elf_section.obj
+         Debug\elf_segment.obj
+         Debug\log.obj
+         Debug\util.obj
+         Debug\main.obj
+         xAnSo.vcxproj -> C:\Users\Administrator\Desktop\android_tools\xAnSo\Windows\Debug\xAnSo.exe
+     1>已完成生成项目“C:\Users\Administrator\Desktop\android_tools\xAnSo\Windows\xAnSo.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:00.76

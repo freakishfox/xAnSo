@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{e9daf14c-b779-41e9-ac3d-b8ef6015d423}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\ElfHeader">
+      <UniqueIdentifier>{d4197040-30f7-461e-810a-f66c78387502}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\ElfSection">
+      <UniqueIdentifier>{0ba25776-38fe-468b-8aac-2bd71f703ab6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\ElfSegment">
+      <UniqueIdentifier>{483b616c-0dc0-4933-8d76-608af6db23b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="log">
+      <UniqueIdentifier>{d90a35cf-ecb5-44bc-9ee6-1d179ff6cbd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="util">
+      <UniqueIdentifier>{b4aa77bd-6936-4f34-8df9-1ad45bc9ade2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\DynSection">
+      <UniqueIdentifier>{747d0193-2774-42fb-b28d-38752c45d5db}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\elf_header.cpp">
+      <Filter>core\ElfHeader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\log.cpp">
+      <Filter>log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\util\util.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\elf_section.cpp">
+      <Filter>core\ElfSection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\elf_segment.cpp">
+      <Filter>core\ElfSegment</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Core\dyn_section.cpp">
+      <Filter>core\DynSection</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Core\elf_common.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\elf.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\elf_header.h">
+      <Filter>core\ElfHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\log.h">
+      <Filter>log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\util\util.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\elf_section.h">
+      <Filter>core\ElfSection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\elf_segment.h">
+      <Filter>core\ElfSegment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core\dyn_section.h">
+      <Filter>core\DynSection</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
