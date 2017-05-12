@@ -71,6 +71,15 @@ public:
          */
     int size(){ return sizeof(Elf32_Dyn); }
 
+    /**
+        * @fn  int dyn_item::get_tag()
+        *
+        * @brief   Gets the tag.
+        *
+        * @return  The tag.
+        */
+    int get_tag(){ return dyn_item_.d_tag; }
+
 private:
 
     /**

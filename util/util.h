@@ -18,6 +18,7 @@ class util
 {
 public:
     static std::string itoa(int i, int rdx = 10);
+    static std::string read_file(std::string file);
 };
 /******************************************************************************/
 #endif// UTIL_795B7F31_9DAF_41E1_9DE4_37B5C1D81364_H__

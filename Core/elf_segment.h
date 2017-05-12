@@ -61,6 +61,15 @@ public:
          */
     int size(){ return sizeof(Elf32_Phdr); }
 
+    /**
+         * @fn  Elf32_Phdr elf_segment::get_header()
+         *
+         * @brief   Gets the header.
+         *
+         * @return  The header.
+         */
+    Elf32_Phdr get_header(){ return header_; }
+
 private:
     Elf32_Phdr header_;
 };

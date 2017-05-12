@@ -82,6 +82,7 @@
     <ClCompile Include="..\Core\elf_header.cpp" />
     <ClCompile Include="..\Core\elf_section.cpp" />
     <ClCompile Include="..\Core\elf_segment.cpp" />
+    <ClCompile Include="..\fix\section_fix.cpp" />
     <ClCompile Include="..\log.cpp" />
     <ClCompile Include="..\util\util.cpp" />
     <ClCompile Include="main.cpp" />
@@ -94,6 +95,7 @@
     <ClInclude Include="..\Core\elf_header.h" />
     <ClInclude Include="..\Core\elf_section.h" />
     <ClInclude Include="..\Core\elf_segment.h" />
+    <ClInclude Include="..\fix\section_fix.h" />
     <ClInclude Include="..\log.h" />
     <ClInclude Include="..\util\util.h" />
   </ItemGroup>

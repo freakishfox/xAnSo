@@ -61,6 +61,15 @@ public:
          * @return  elf header size
          */
     int size(){ return sizeof(Elf32_Ehdr); }
+
+    /**
+         * @fn  Elf32_Ehdr elf_header::get_header()
+         *
+         * @brief   Gets the orignal header content.
+         *
+         * @return  The header.
+         */
+    Elf32_Ehdr get_header(){ return header_; };
 private:
 
     /**

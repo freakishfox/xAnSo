@@ -82,6 +82,19 @@ public:
          */
     int count(){ return items_.size(); }
 
+public:
+
+    /**
+         * @fn  dyn_item dyn_section::find_dyn_by_tag(int tag);
+         *
+         * @brief   Searches for the dynamic item by tag.
+         *
+         * @param   tag - the input tag to search
+         *
+         * @return  The found dynamic by tag.
+         */
+    dyn_item find_dyn_by_tag(int tag);
+
 private:
     std::vector<dyn_item> items_;
 };

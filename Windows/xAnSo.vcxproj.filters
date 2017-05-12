@@ -34,6 +34,15 @@
     <Filter Include="core\DynSection">
       <UniqueIdentifier>{747d0193-2774-42fb-b28d-38752c45d5db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="fix">
+      <UniqueIdentifier>{e3d9fd89-eece-420d-ac60-34c5f62ef0d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="viewer">
+      <UniqueIdentifier>{faf21116-9cc0-4cf1-afc6-26ff913a0471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fix\section_fix">
+      <UniqueIdentifier>{43fc9676-126f-4eb8-80f0-305055a3986a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -59,6 +68,9 @@
     </ClCompile>
     <ClCompile Include="..\Core\dyn_section.cpp">
       <Filter>core\DynSection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\fix\section_fix.cpp">
+      <Filter>fix\section_fix</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -88,6 +100,9 @@
     </ClInclude>
     <ClInclude Include="..\Core\dyn_section.h">
       <Filter>core\DynSection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\fix\section_fix.h">
+      <Filter>fix\section_fix</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

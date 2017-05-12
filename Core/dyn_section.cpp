@@ -6,6 +6,7 @@
 
 #include "dyn_section.h"
 #include "log.h"
+#include <algorithm>
 
 /******************************************************************************/
 
@@ -64,5 +65,19 @@ std::string dyn_section::print()
 
     LOG(DBG, "print dyn section content");
     return styled_section;
+}
+
+dyn_item dyn_section::find_dyn_by_tag(int tag)
+{
+    dyn_item rs_item;
+    auto itr = std::find_if(items_.begin(), items_.end(), 
+        [=](dyn_item &item)->bool{
+        return (tag == item.get_tag());
+    });
+    if (itr != items_.end()){
+        return *itr;
+    }
+
+    return rs_item;
 }
 
