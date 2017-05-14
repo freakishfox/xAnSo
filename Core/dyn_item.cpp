@@ -15,7 +15,7 @@
 
 dyn_item::dyn_item()
 {
-    dyn_item_.d_tag = 0;
+    dyn_item_.d_tag = 0x12345678;
     dyn_item_.d_un.d_ptr = 0;
     dyn_item_.d_un.d_val = 0;
 }

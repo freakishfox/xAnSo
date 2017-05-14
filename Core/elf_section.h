@@ -62,6 +62,15 @@ public:
          */
     int size(){ return sizeof(Elf32_Shdr); }
 
+    /**
+         * @fn  Elf32_Shdr elf_section::&get_header()
+         *
+         * @brief   Gets the header content reference, so header_ may be modified
+         *
+         * @return  The header.
+         */
+    Elf32_Shdr &get_header(){ return header_; }
+
 private:
     Elf32_Shdr header_;
 };

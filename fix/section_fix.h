@@ -11,6 +11,7 @@
 #include "Core/elf_header.h"
 #include "Core/elf_segment.h"
 #include "Core/dyn_section.h"
+#include "Core/elf_section.h"
 
 #include <string>
 #include <vector>
@@ -69,6 +70,36 @@ private:
          */
     bool pre_load();
 
+    /**
+         * @fn  bool section_fix::first_create_sections();
+         *
+         * @brief   just create sections with information from .dynamic section, then we fix it
+         *
+         * @return  True if it succeeds, false if it fails.
+         */
+    bool first_create_sections();
+
+    /**
+         * @fn  int section_fix::calc_VA_FA_gap(Elf32_Addr section_addr);
+         *
+         * @brief   Calculates the address gap betwwen virtual address and file offset
+         *
+         * @param   section_addr    The section address.
+         *
+         * @return  The calculated variable arguments fa gap.
+         */
+    int calc_VA_FA_gap(Elf32_Addr section_addr);
+
+    /**
+         * @fn  int section_fix::find_string_idx_in_strtab(std::string str);
+         *
+         * @brief   Searches for the first string index in strtab.
+         *
+         * @param   str The string.
+         *
+         * @return  The found string index in strtab.
+         */
+    int find_string_idx_in_strtab(std::string str);
 private:
     std::string file_content_; //whole file content
 
@@ -77,7 +108,11 @@ private:
     std::vector<elf_segment> vec_load_; //save pt_load segements
     dyn_section dynamic_section_; //save .dynamic section
 
+    //created sections
+    std::vector<elf_section> vec_created_section_;
 
+    //string used to create .shstrtab
+    std::string sh_str_;
 };
 /******************************************************************************/
 #endif// SECTION_FIX_CF78F56C_58E1_4F6D_B103_CA85BDF6C2B8_H__

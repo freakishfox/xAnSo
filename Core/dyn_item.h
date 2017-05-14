@@ -78,7 +78,18 @@ public:
         *
         * @return  The tag.
         */
-    int get_tag(){ return dyn_item_.d_tag; }
+    Elf32_Sword get_tag(){ return dyn_item_.d_tag; }
+    Elf32_Word  get_value(){ return dyn_item_.d_un.d_val; }
+    Elf32_Addr get_addr(){ return dyn_item_.d_un.d_ptr; }
+
+    /**
+         * @fn  bool dyn_item::is_valid()
+         *
+         * @brief   Query if this object is valid. 0x12345678 means self define invalid value, init in constructor
+         *
+         * @return  True if valid, false if not.
+         */
+    bool is_valid(){ return dyn_item_.d_tag != 0x12345678; }
 
 private:
 
