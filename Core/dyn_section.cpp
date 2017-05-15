@@ -39,7 +39,7 @@ bool dyn_section::from_string(std::string str_content)
         LOG(DBG, "read dyn item flag=%d, value=0x%x", dyn->d_tag, dyn->d_un.d_val);
 
         dyn_item item;
-        item.from_string((char *)dyn);
+        item.from_string(std::string((char *)dyn, sizeof(Elf32_Dyn)));
         items_.push_back(item);
     }
     return true;

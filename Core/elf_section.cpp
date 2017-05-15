@@ -58,4 +58,9 @@ std::string elf_section::print()
     return styled_header;
 }
 
+std::string elf_section::to_string()
+{
+    return std::string((const char*)&header_, sizeof(Elf32_Shdr));
+}
+
 /******************************************************************************/

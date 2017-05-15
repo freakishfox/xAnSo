@@ -79,6 +79,8 @@ private:
          */
     bool first_create_sections();
 
+    bool create_sh_str_tab_section();
+
     /**
          * @fn  int section_fix::calc_VA_FA_gap(Elf32_Addr section_addr);
          *

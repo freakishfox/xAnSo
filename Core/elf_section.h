@@ -45,6 +45,15 @@ public:
     bool from_string(std::string str_content);
 
     /**
+         * @fn  std::string elf_section::to_string();
+         *
+         * @brief   Converts this header to a string.
+         *
+         * @return  This header as a std::string.
+         */
+    std::string to_string();
+
+    /**
          * @fn  std::string elf_section::print();
          *
          * @brief   print the section header
