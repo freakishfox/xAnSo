@@ -45,6 +45,16 @@ public:
     bool from_string(std::string str_content);
 
     /**
+         * @fn  std::string elf_header::to_string();
+         *
+         * @brief   Converts this object to a string.
+         *
+         * @return  This object as a std::string.
+         */
+    std::string to_string();
+
+
+    /**
          * @fn  std::string elf_header::print();
          *
          * @brief   print the elf header as a styled string
@@ -69,7 +79,7 @@ public:
          *
          * @return  The header.
          */
-    Elf32_Ehdr get_header(){ return header_; };
+    Elf32_Ehdr &get_header(){ return header_; };
 private:
 
     /**

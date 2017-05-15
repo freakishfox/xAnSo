@@ -84,18 +84,21 @@ bool section_fix::save_as(std::string dst_file)
     Elf32_Off sh_str_tab = file_content_.size();
     Elf32_Word sh_str_tab_size = sh_str_.size();
     elf_section sh_str_section;
-    Elf32_Shdr header_ = sh_str_section.get_header();
+    Elf32_Shdr &header_ = sh_str_section.get_header();
     header_.sh_name = find_string_idx_in_strtab(".shstrtab");
     header_.sh_offset = sh_str_tab;
     header_.sh_size = sh_str_tab_size;
     elf_segment last_segment = vec_load_[vec_load_.size() - 1];
     header_.sh_addr = header_.sh_offset + (last_segment.get_header().p_paddr - last_segment.get_header().p_offset);
+    header_.sh_type = SHT_STRTAB;
+    header_.sh_flags = SHF_ALLOC;
 
     section_table += sh_str_section.to_string();
     //3. append shstrtab section content to the end of the file
     
-    Elf32_Off sh_str_offset = file_content_.size();
     file_content_ += sh_str_;
+    Elf32_Off sh_str_offset = file_content_.size();
+
     file_content_ += section_table;
 
     //4. adjust elf header
@@ -105,7 +108,7 @@ bool section_fix::save_as(std::string dst_file)
         return false;
     }
 
-    Elf32_Ehdr elf_file_header_ = elf_file_header.get_header();
+    Elf32_Ehdr &elf_file_header_ = elf_file_header.get_header();
     elf_file_header_.e_shentsize = sizeof(Elf32_Shdr);
     elf_file_header_.e_shnum = vec_created_section_.size() + 2;
     elf_file_header_.e_shoff = sh_str_offset;
@@ -119,7 +122,9 @@ bool section_fix::save_as(std::string dst_file)
         return false;
     }
 
-    out_file_.write(file_content_.c_str(), file_content_.size());
+    std::string elf_header_content_ = elf_file_header.to_string();
+    out_file_.write(elf_header_content_.c_str(), elf_header_content_.size());
+    out_file_.write(file_content_.c_str() + elf_file_header.size(), file_content_.size() - elf_file_header.size());
     LOG(DBG, "save fixed elf file ok");
     return true;
 }
@@ -135,7 +140,7 @@ bool section_fix::pre_load()
         return false;
     }
 
-    Elf32_Ehdr header_ = elf_header_.get_header();
+    Elf32_Ehdr &header_ = elf_header_.get_header();
     Elf32_Off program_header_table = header_.e_phoff;
     Elf32_Half program_header_count = header_.e_phnum;
     for (int idx = 0; idx < program_header_count; idx++){
@@ -170,7 +175,7 @@ bool section_fix::first_create_sections()
     if (dyn_str_tab.is_valid() 
         && dyn_str_sz.is_valid()){
         elf_section str_section_;
-        Elf32_Shdr header_ = str_section_.get_header();
+        Elf32_Shdr &header_ = str_section_.get_header();
         header_.sh_type = SHT_STRTAB;
         header_.sh_addr = dyn_str_tab.get_addr();
         header_.sh_offset = header_.sh_addr - calc_VA_FA_gap(header_.sh_addr);
@@ -187,7 +192,7 @@ bool section_fix::first_create_sections()
     //dyn_item dyn_sym_sz = dynamic_section_.find_dyn_by_tag(DT_SYMTAB);
     if (dyn_sym.is_valid()){
         elf_section sym_section_;
-        Elf32_Shdr header_ = sym_section_.get_header();
+        Elf32_Shdr &header_ = sym_section_.get_header();
         header_.sh_type = SHT_SYMTAB;
         header_.sh_addr = dyn_sym.get_addr();
         header_.sh_offset = header_.sh_addr - calc_VA_FA_gap(header_.sh_addr);
@@ -205,7 +210,7 @@ bool section_fix::first_create_sections()
     if (dyn_rel_plt.is_valid()
         && dyn_rel_plt_sz.is_valid()){
         elf_section rel_plt_section_;
-        Elf32_Shdr header_ = rel_plt_section_.get_header();
+        Elf32_Shdr &header_ = rel_plt_section_.get_header();
         header_.sh_type = SHT_REL;
         header_.sh_addr = dyn_rel_plt.get_addr();
         header_.sh_offset = header_.sh_addr - calc_VA_FA_gap(header_.sh_addr);
@@ -223,7 +228,7 @@ bool section_fix::first_create_sections()
     if (dyn_rel_dyn.is_valid()
         && dyn_rel_dyn_sz.is_valid()){
         elf_section rel_dyn_section_;
-        Elf32_Shdr header_ = rel_dyn_section_.get_header();
+        Elf32_Shdr &header_ = rel_dyn_section_.get_header();
         header_.sh_type = SHT_REL;
         header_.sh_addr = dyn_rel_dyn.get_addr();
         header_.sh_offset = header_.sh_addr - calc_VA_FA_gap(header_.sh_addr);
@@ -241,7 +246,7 @@ bool section_fix::first_create_sections()
     if (dyn_init_array.is_valid()
         && dyn_init_array_sz.is_valid()){
         elf_section init_array_section_;
-        Elf32_Shdr header_ = init_array_section_.get_header();
+        Elf32_Shdr &header_ = init_array_section_.get_header();
         header_.sh_type = SHT_INIT_ARRAY;
         header_.sh_addr = dyn_init_array.get_addr();
         header_.sh_offset = header_.sh_addr - calc_VA_FA_gap(header_.sh_addr);
@@ -259,7 +264,7 @@ bool section_fix::first_create_sections()
     if (dyn_fini_array.is_valid()
         && dyn_fini_array_sz.is_valid()){
         elf_section fini_array_section_;
-        Elf32_Shdr header_ = fini_array_section_.get_header();
+        Elf32_Shdr &header_ = fini_array_section_.get_header();
         header_.sh_type = SHT_FINI_ARRAY;
         header_.sh_addr = dyn_fini_array.get_addr();
         header_.sh_offset = header_.sh_addr - calc_VA_FA_gap(header_.sh_addr);
@@ -293,7 +298,8 @@ int section_fix::calc_VA_FA_gap(Elf32_Addr section_addr)
 
     //1. now find it
     for (auto itr : vec_load_){
-        if (itr.get_header().p_paddr >= section_addr){
+        if (itr.get_header().p_paddr < section_addr
+            && itr.get_header().p_paddr + itr.get_header().p_memsz > section_addr){
             //got it
             return (itr.get_header().p_paddr - itr.get_header().p_offset);
         }
@@ -307,32 +313,32 @@ int section_fix::find_string_idx_in_strtab(std::string str)
 {
     if (sh_str_.empty()){
         //prepare the section header string
-        
-        sh_str_.append("\0"); //idx = 0
-        sh_str_.append(".interp\0"); //idx = 1
-        sh_str_.append(".note.gnu.build-i\0");
-        sh_str_.append(".dynsym\0");
-        sh_str_.append(".dynstr\0");
-        sh_str_.append(".hash\0");
-        sh_str_.append(".gnu.version\0");
-        sh_str_.append(".gnu.version_d\0");
-        sh_str_.append(".gnu.version_r\0");
-        sh_str_.append(".rel.dyn\0");
-        sh_str_.append(".rel.plt\0");
-        sh_str_.append(".text\0");
-        sh_str_.append(".ARM.extab\0");
-        sh_str_.append(".ARM.exidx\0");
-        sh_str_.append(".rodata\0");
-        sh_str_.append(".fini_array\0");
-        sh_str_.append(".init_array\0");
-        sh_str_.append(".dynamic\0");
-        sh_str_.append(".got\0");
-        sh_str_.append(".data\0");
-        sh_str_.append(".bss\0");
-        sh_str_.append(".comment\0");
-        sh_str_.append(".note.gnu.gold-ve\0");
-        sh_str_.append(".ARM.attributes\0");
-        sh_str_.append(".shstrtab\0");
+        std::string null_seperator("\0", 1);
+        sh_str_ += null_seperator; //idx = 0
+        sh_str_ += (".interp" + null_seperator); //idx = 1
+        sh_str_ += (".note.gnu.build-i" + null_seperator);
+        sh_str_ += (".dynsym" + null_seperator);
+        sh_str_ += (".dynstr" + null_seperator);
+        sh_str_ += (".hash" + null_seperator);
+        sh_str_ += (".gnu.version" + null_seperator);
+        sh_str_ += (".gnu.version_d" + null_seperator);
+        sh_str_ += (".gnu.version_r" + null_seperator);
+        sh_str_ += (".rel.dyn" + null_seperator);
+        sh_str_ += (".rel.plt" + null_seperator);
+        sh_str_ += (".text" + null_seperator);
+        sh_str_ += (".ARM.extab" + null_seperator);
+        sh_str_ += (".ARM.exidx" + null_seperator);
+        sh_str_ += (".rodata" + null_seperator);
+        sh_str_ += (".fini_array" + null_seperator);
+        sh_str_ += (".init_array" + null_seperator);
+        sh_str_ += (".dynamic" + null_seperator);
+        sh_str_ += (".got" + null_seperator);
+        sh_str_ += (".data" + null_seperator);
+        sh_str_ += (".bss" + null_seperator);
+        sh_str_ += (".comment" + null_seperator);
+        sh_str_ += (".note.gnu.gold-ve" + null_seperator);
+        sh_str_ += (".ARM.attributes" + null_seperator);
+        sh_str_ += (".shstrtab" + null_seperator);
     }
 
     std::string::size_type idx = sh_str_.find(str);

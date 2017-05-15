@@ -145,4 +145,10 @@ std::string elf_header::type_2_string(Elf32_Half type)
     }
 }
 
+std::string elf_header::to_string()
+{
+    std::string elf_header_string_;
+    return std::string((const char*)&header_, sizeof(Elf32_Ehdr));
+}
+
 /******************************************************************************/
