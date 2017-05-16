@@ -72,7 +72,7 @@ bool section_fix::save_as(std::string dst_file)
     for (auto itr : vec_created_section_)
     {
         section_table += itr.to_string();
-    }
+    } 
     
     //
     std::sort(vec_load_.begin(), vec_load_.end(),
@@ -92,6 +92,7 @@ bool section_fix::save_as(std::string dst_file)
     header_.sh_addr = header_.sh_offset + (last_segment.get_header().p_paddr - last_segment.get_header().p_offset);
     header_.sh_type = SHT_STRTAB;
     header_.sh_flags = SHF_ALLOC;
+    header_.sh_addralign = header_.sh_addr % 4 ? 1 : 4;
 
     section_table += sh_str_section.to_string();
     //3. append shstrtab section content to the end of the file
@@ -156,6 +157,7 @@ bool section_fix::pre_load()
             //found pt_dynamic segment
             std::string dynamic_segment_content = std::string(file_content_.c_str() + segment_.get_header().p_offset, segment_.get_header().p_filesz);
             dynamic_section_.from_string(dynamic_segment_content);
+            dynamic_section_.save_section_information(segment_content);
         }
     }
 
@@ -182,6 +184,7 @@ bool section_fix::first_create_sections()
         header_.sh_size = dyn_str_sz.get_value();
         header_.sh_flags = SHF_ALLOC;
         header_.sh_name = find_string_idx_in_strtab(".dynstr");
+        header_.sh_addralign = header_.sh_addr % 4 ? 1 : 4;
 
         vec_created_section_.push_back(str_section_);
         LOG(DBG, ".dynstr section created");
@@ -189,16 +192,19 @@ bool section_fix::first_create_sections()
 
     //create  .dynsym
     dyn_item dyn_sym = dynamic_section_.find_dyn_by_tag(DT_SYMTAB);
+    dyn_item dyn_sym_entry_size = dynamic_section_.find_dyn_by_tag(DT_SYMENT);
     //dyn_item dyn_sym_sz = dynamic_section_.find_dyn_by_tag(DT_SYMTAB);
     if (dyn_sym.is_valid()){
         elf_section sym_section_;
         Elf32_Shdr &header_ = sym_section_.get_header();
         header_.sh_type = SHT_SYMTAB;
         header_.sh_addr = dyn_sym.get_addr();
+        header_.sh_entsize = dyn_sym_entry_size.get_value();
         header_.sh_offset = header_.sh_addr - calc_VA_FA_gap(header_.sh_addr);
         header_.sh_size = 0; //???? fix me
         header_.sh_flags = SHF_ALLOC;
         header_.sh_name = find_string_idx_in_strtab(".dynsym");
+        header_.sh_addralign = header_.sh_addr % 4 ? 1 : 4;
 
         vec_created_section_.push_back(sym_section_);
         LOG(DBG, ".dynsym section created");
@@ -207,6 +213,7 @@ bool section_fix::first_create_sections()
     //create .rel.plt
     dyn_item dyn_rel_plt = dynamic_section_.find_dyn_by_tag(DT_JMPREL);
     dyn_item dyn_rel_plt_sz = dynamic_section_.find_dyn_by_tag(DT_PLTRELSZ);
+    //dyn_item dyn_rel_plt_entry_size = dynamic_section_.find_dyn_by_tag(DT_P)  //?????fixme 
     if (dyn_rel_plt.is_valid()
         && dyn_rel_plt_sz.is_valid()){
         elf_section rel_plt_section_;
@@ -215,8 +222,10 @@ bool section_fix::first_create_sections()
         header_.sh_addr = dyn_rel_plt.get_addr();
         header_.sh_offset = header_.sh_addr - calc_VA_FA_gap(header_.sh_addr);
         header_.sh_size = dyn_rel_plt_sz.get_value();
+        header_.sh_entsize = 8; //fixme, get from .dynamic ??
         header_.sh_flags = SHF_ALLOC;
         header_.sh_name = find_string_idx_in_strtab(".rel.plt");
+        header_.sh_addralign = header_.sh_addr % 4 ? 1 : 4;
 
         vec_created_section_.push_back(rel_plt_section_);
         LOG(DBG, ".rel.plt section created");
@@ -225,6 +234,7 @@ bool section_fix::first_create_sections()
     //create .rel.dyn
     dyn_item dyn_rel_dyn = dynamic_section_.find_dyn_by_tag(DT_REL);
     dyn_item dyn_rel_dyn_sz = dynamic_section_.find_dyn_by_tag(DT_RELSZ);
+    dyn_item dyn_rel_dyn_entry_size = dynamic_section_.find_dyn_by_tag(DT_RELENT);
     if (dyn_rel_dyn.is_valid()
         && dyn_rel_dyn_sz.is_valid()){
         elf_section rel_dyn_section_;
@@ -233,8 +243,10 @@ bool section_fix::first_create_sections()
         header_.sh_addr = dyn_rel_dyn.get_addr();
         header_.sh_offset = header_.sh_addr - calc_VA_FA_gap(header_.sh_addr);
         header_.sh_size = dyn_rel_dyn_sz.get_value();
+        header_.sh_entsize = dyn_rel_dyn_entry_size.get_value();
         header_.sh_flags = SHF_ALLOC;
         header_.sh_name = find_string_idx_in_strtab(".rel.dyn");
+        header_.sh_addralign = header_.sh_addr % 4 ? 1 : 4;
 
         vec_created_section_.push_back(rel_dyn_section_);
         LOG(DBG, ".rel.dyn section created");
@@ -253,6 +265,7 @@ bool section_fix::first_create_sections()
         header_.sh_size = dyn_init_array_sz.get_value();
         header_.sh_flags = SHF_ALLOC | SHF_WRITE;
         header_.sh_name = find_string_idx_in_strtab(".init_array");
+        header_.sh_addralign = header_.sh_addr % 4 ? 1 : 4;
 
         vec_created_section_.push_back(init_array_section_);
         LOG(DBG, ".init_array section created");
@@ -271,9 +284,30 @@ bool section_fix::first_create_sections()
         header_.sh_size = dyn_fini_array_sz.get_value();
         header_.sh_flags = SHF_ALLOC | SHF_WRITE;
         header_.sh_name = find_string_idx_in_strtab(".fini_array");
+        header_.sh_addralign = header_.sh_addr % 4 ? 1 : 4;
 
         vec_created_section_.push_back(fini_array_section_);
         LOG(DBG, ".fini_array section created");
+    }
+
+    //create dynmamic section
+    {
+        std::string dyn_segment_string_ = dynamic_section_.get_section_information();
+        elf_segment dyn_segment_;
+        dyn_segment_.from_string(dyn_segment_string_);
+
+        elf_section dyn_section_;
+        Elf32_Shdr &header_ = dyn_section_.get_header();
+        header_.sh_name = find_string_idx_in_strtab(".dynamic");
+        header_.sh_addr = dyn_segment_.get_header().p_vaddr;
+        header_.sh_offset = dyn_segment_.get_header().p_offset;
+        header_.sh_size = dyn_segment_.get_header().p_filesz;
+        header_.sh_type = SHT_DYNAMIC;
+        header_.sh_flags = SHF_WRITE;
+        header_.sh_addralign = header_.sh_addr % 4 ? 1 : 4;
+
+        vec_created_section_.push_back(dyn_section_);
+        LOG(DBG, ".dynamic section created");
     }
 
     return true;
@@ -338,6 +372,7 @@ int section_fix::find_string_idx_in_strtab(std::string str)
         sh_str_ += (".comment" + null_seperator);
         sh_str_ += (".note.gnu.gold-ve" + null_seperator);
         sh_str_ += (".ARM.attributes" + null_seperator);
+        sh_str_ += (".dynamic" + null_seperator);
         sh_str_ += (".shstrtab" + null_seperator);
     }
 

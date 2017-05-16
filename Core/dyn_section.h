@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include "dyn_item.h"
+#include "elf_section.h"
 /******************************************************************************/
 
 /**
@@ -45,6 +46,24 @@ public:
          * @return  True if it succeeds, false if it fails.
          */
     bool from_string(std::string str_content);
+
+    /**
+         * @fn  void dyn_section::save_section_information(std::string section_content);
+         *
+         * @brief   Saves dynamic section information.
+         *
+         * @param   section_content The section content.
+         */
+    void save_section_information(std::string section_content);
+
+    /**
+         * @fn  elf_section dyn_section::get_section_information();
+         *
+         * @brief   Gets the section format of the dynamic section.
+         *
+         * @return  The section.
+         */
+    std::string get_section_information();
 
     /**
          * @fn  std::string dyn_section::to_string();
@@ -96,7 +115,11 @@ public:
     dyn_item find_dyn_by_tag(int tag);
 
 private:
+    //items in the .dynamic section
     std::vector<dyn_item> items_;
+
+    //dynamic section
+    std::string section_content_;
 };
 /******************************************************************************/
 #endif// DYN_SECTION_A3C72CD4_8D8B_4985_8C19_1FE84230709F_H__

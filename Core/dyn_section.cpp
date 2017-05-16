@@ -5,6 +5,7 @@
  ******************************************************************************/
 
 #include "dyn_section.h"
+#include "elf_segment.h"
 #include "log.h"
 #include <algorithm>
 
@@ -79,5 +80,15 @@ dyn_item dyn_section::find_dyn_by_tag(int tag)
     }
 
     return rs_item;
+}
+
+void dyn_section::save_section_information(std::string section_content)
+{
+    section_content_ = section_content;
+}
+
+std::string dyn_section::get_section_information()
+{
+    return section_content_;
 }
 
