@@ -210,25 +210,25 @@ bool section_fix::first_create_sections()
         LOG(DBG, ".dynsym section created");
     }
 
-    //create .rel.plt
-    dyn_item dyn_rel_plt = dynamic_section_.find_dyn_by_tag(DT_JMPREL);
-    dyn_item dyn_rel_plt_sz = dynamic_section_.find_dyn_by_tag(DT_PLTRELSZ);
-    //dyn_item dyn_rel_plt_entry_size = dynamic_section_.find_dyn_by_tag(DT_P)  //?????fixme 
-    if (dyn_rel_plt.is_valid()
-        && dyn_rel_plt_sz.is_valid()){
-        elf_section rel_plt_section_;
-        Elf32_Shdr &header_ = rel_plt_section_.get_header();
-        header_.sh_type = SHT_REL;
-        header_.sh_addr = dyn_rel_plt.get_addr();
+    //create .hash
+    dyn_item dyn_hash = dynamic_section_.find_dyn_by_tag(DT_HASH);
+    if (dyn_hash.is_valid()){
+        elf_section hash_section_;
+        Elf32_Shdr &header_ = hash_section_.get_header();
+        header_.sh_type = SHT_HASH;
+        header_.sh_name = find_string_idx_in_strtab(".hash");
+        header_.sh_addr = dyn_hash.get_addr();
         header_.sh_offset = header_.sh_addr - calc_VA_FA_gap(header_.sh_addr);
-        header_.sh_size = dyn_rel_plt_sz.get_value();
-        header_.sh_entsize = 8; //fixme, get from .dynamic ??
+
+        //calc hash size
+        int *hash_content_ = (int *)(file_content_.c_str() + header_.sh_offset);
+        header_.sh_size = (hash_content_[0] + hash_content_[1] + 2) * sizeof(int);
+
         header_.sh_flags = SHF_ALLOC;
-        header_.sh_name = find_string_idx_in_strtab(".rel.plt");
         header_.sh_addralign = header_.sh_addr % 4 ? 1 : 4;
 
-        vec_created_section_.push_back(rel_plt_section_);
-        LOG(DBG, ".rel.plt section created");
+        vec_created_section_.push_back(hash_section_);
+        LOG(DBG, ".hash section created");
     }
 
     //create .rel.dyn
@@ -252,6 +252,43 @@ bool section_fix::first_create_sections()
         LOG(DBG, ".rel.dyn section created");
     }
 
+    //create .rel.plt
+    dyn_item dyn_rel_plt = dynamic_section_.find_dyn_by_tag(DT_JMPREL);
+    dyn_item dyn_rel_plt_sz = dynamic_section_.find_dyn_by_tag(DT_PLTRELSZ);
+    //dyn_item dyn_rel_plt_entry_size = dynamic_section_.find_dyn_by_tag(DT_P)  //?????fixme 
+    if (dyn_rel_plt.is_valid()
+        && dyn_rel_plt_sz.is_valid()){
+        elf_section rel_plt_section_;
+        Elf32_Shdr &header_ = rel_plt_section_.get_header();
+        header_.sh_type = SHT_REL;
+        header_.sh_addr = dyn_rel_plt.get_addr();
+        header_.sh_offset = header_.sh_addr - calc_VA_FA_gap(header_.sh_addr);
+        header_.sh_size = dyn_rel_plt_sz.get_value();
+        header_.sh_entsize = 8; //fixme, get from .dynamic ??
+        header_.sh_flags = SHF_ALLOC;
+        header_.sh_name = find_string_idx_in_strtab(".rel.plt");
+        header_.sh_addralign = header_.sh_addr % 4 ? 1 : 4;
+
+        vec_created_section_.push_back(rel_plt_section_);
+        LOG(DBG, ".rel.plt section created");
+    }
+
+    //create .plt
+    {
+        //just treat the data behind .rel.plt as .plt section
+        elf_section plt_section_;
+        Elf32_Shdr &header_ = plt_section_.get_header();
+        header_.sh_type = SHT_PROGBITS;
+        header_.sh_addr = dyn_rel_plt.get_addr() + dyn_rel_plt_sz.get_value();
+        header_.sh_offset = header_.sh_addr - calc_VA_FA_gap(header_.sh_addr);
+        header_.sh_size = (20 + 12 * (dyn_rel_plt_sz.get_value()) / sizeof(Elf32_Rel)); //please reference to the plt struct
+        header_.sh_flags = SHF_EXECINSTR | SHF_ALLOC;
+        header_.sh_name = find_string_idx_in_strtab(".plt");
+        header_.sh_addralign = header_.sh_addr % 4 ? 1 : 4;
+
+        vec_created_section_.push_back(plt_section_);
+        LOG(DBG, ".plt section created");
+    }
     //create .init_array
     dyn_item dyn_init_array = dynamic_section_.find_dyn_by_tag(DT_INIT_ARRAY);
     dyn_item dyn_init_array_sz = dynamic_section_.find_dyn_by_tag(DT_INIT_ARRAYSZ);
