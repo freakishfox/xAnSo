@@ -79,7 +79,34 @@ private:
          */
     bool first_create_sections();
 
-    bool create_sh_str_tab_section();
+    /**
+         * @fn  bool section_fix::fix_sym_tab_size();
+         *
+         * @brief   fix symtab size by search the symtab content until to the _end symbol
+         *
+         * @return  True if it succeeds, false if it fails.
+         */
+    bool fix_sym_tab_size();
+
+    /**
+         * @fn  bool section_fix::fix_sym_item_section_ref();
+         *
+         * @brief   adjust sym item section ref
+         *
+         * @return  True if it succeeds, false if it fails.
+         */
+    bool fix_sym_item_section_ref();
+
+    /**
+         * @fn  int section_fix::calc_offset_section_idx(Elf32_Off offset);
+         *
+         * @brief   Calculates which section is the offset should be.
+         *
+         * @param   offset  The offset.
+         *
+         * @return  The calculated offset section index.
+         */
+    int calc_addr_section_idx(Elf32_Off offset);
 
     /**
          * @fn  int section_fix::calc_VA_FA_gap(Elf32_Addr section_addr);
