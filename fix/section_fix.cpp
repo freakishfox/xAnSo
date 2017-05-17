@@ -378,8 +378,8 @@ bool section_fix::first_create_sections()
 
 
     //fix symtab size
-    return fix_sym_tab_size();
-        //&& fix_sym_item_section_ref();
+    return fix_sym_tab_size()
+        && fix_sym_item_section_ref();
 }
 
 int section_fix::calc_VA_FA_gap(Elf32_Addr section_addr)
@@ -541,6 +541,17 @@ bool section_fix::fix_sym_item_section_ref()
                 if (sym_name_off_ < dyn_string.size()){
                     std::string syn_name = dyn_string.c_str() + sym_name_off_;
                     sym_start_->st_shndx = calc_addr_section_idx(sym_start_->st_value);
+                    struct bit_info{
+                        unsigned char sym_info_type : 4;
+                        unsigned char sym_info_bind : 4;
+                    };
+                    bit_info *sym_info_ = (bit_info *)&sym_start_->st_info;
+                    if (sym_info_->sym_info_type > 4){ // max = STI_FILE = 4
+                        sym_info_->sym_info_type = 2; // STI_FUNC = 2
+                    }
+                    if (sym_info_->sym_info_bind > 2){ // max = STB_WEAK
+                        sym_info_->sym_info_bind = 1; //STB_GLOBAL = 2
+                    }
 
                     if (syn_name.find("_end") != std::string::npos){
                         //found the end
@@ -568,6 +579,8 @@ bool section_fix::fix_sym_item_section_ref()
 
 int section_fix::calc_addr_section_idx(Elf32_Off addr)
 {
+    return vec_created_section_.size() + 1;
+
     std::sort(vec_created_section_.begin(), vec_created_section_.end(), 
         [=](elf_section &item1, elf_section &item2)->bool{
         return item1.get_header().sh_addr < item2.get_header().sh_addr;
