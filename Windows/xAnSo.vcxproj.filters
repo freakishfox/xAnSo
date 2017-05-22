@@ -104,5 +104,8 @@
     <ClInclude Include="..\fix\section_fix.h">
       <Filter>fix\section_fix</Filter>
     </ClInclude>
+    <ClInclude Include="..\config.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

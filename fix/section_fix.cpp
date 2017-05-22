@@ -586,7 +586,7 @@ int section_fix::calc_addr_section_idx(Elf32_Off addr)
         return item1.get_header().sh_addr < item2.get_header().sh_addr;
     });
 
-    for (int i = 0; i < vec_created_section_.size(); i ++){
+    for (unsigned int i = 0; i < vec_created_section_.size(); i ++){
         elf_section section_ = vec_created_section_[i];
         if (addr >= section_.get_header().sh_addr
             && addr < section_.get_header().sh_addr + section_.get_header().sh_size){
