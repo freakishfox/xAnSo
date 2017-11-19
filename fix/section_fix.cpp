@@ -475,14 +475,20 @@ bool section_fix::fix_sym_tab_size()
 
         int search_cnt = 0; //max search count = 10000
         Elf32_Sym *sym_start_ = (Elf32_Sym *)(file_content_.c_str() + dym_section_itr_->get_header().sh_offset);
+        sym_start_++;
         do 
         {
             try
             {
                 Elf32_Word sym_name_off_ = sym_start_->st_name;
+                //if (!sym_name_off_){
+                //    //found the end
+                //    break;
+                //}
+
                 if (sym_name_off_ < dyn_string.size()){
                     std::string syn_name = dyn_string.c_str() + sym_name_off_;
-                    if (syn_name.find("_end") != std::string::npos){
+                    if (syn_name.empty()){
                         //found the end
                         break;
                     }
@@ -506,6 +512,8 @@ bool section_fix::fix_sym_tab_size()
         }
 
         dym_section_itr_->get_header().sh_size = (search_cnt + 1) * sizeof(Elf32_Sym);
+
+        LOG(DBG, "found %d symbols", search_cnt);
         return true;
     }
 
