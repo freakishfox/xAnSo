@@ -1,6 +1,6 @@
 
-# 从IDA 中Dump指定段的内存
-# freakishfox@敌法
+# dump memory from IDA Debugger
+#
 
 import idautils
 import idc
@@ -17,11 +17,12 @@ def main(ea_start, ea_end, save_file):
         handle_f.write(struct.pack('B',byte_value))
     
     handle_f.close()
+    hooks = idaapi.DBG_Hooks()
+    hooks.hook()
           
     print '[*]script by freakish, enjoy~~'       
     print '[*]script finish'
 
-# 在这里修改参数
 
 ea_start = 0xE20
 ea_end = 0x173C8
