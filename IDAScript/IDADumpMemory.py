@@ -25,7 +25,9 @@ def main(ea_start, ea_end, save_file):
 
 
 ea_start = 0xE20
-ea_end = 0x173C8
-save_file = 'c:/text.seg'
+ea_size = 0x7000
+
+ea_end = ea_start + ea_size
+save_file = 'd:/text.so'
 
 main(ea_start, ea_end, save_file)
